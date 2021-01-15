@@ -1,14 +1,3 @@
-terraform {
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "~> 2.7"
-    }
-  }
-}
-
-provider "docker" {}
-
 resource "null_resource" "dockervol" {
   provisioner "local-exec" {
     command = "mkdir noderedvol/ || true && sudo chown -R 1000:1000 noderedvol/"
@@ -22,22 +11,21 @@ resource "random_string" "random" {
   special = false
 }
 
-resource "docker_image" "nodered_image" {
-  name = "nodered/node-red:latest"
+module "image" {
+  source = "./image"
 }
-
 resource "docker_container" "nodered_container" {
   count = local.container_count
-  image = docker_image.nodered_image.latest
-  name = join("-",["nodered", random_string.random[count.index].result])
+  image = module.image.image_out
+  name = join("-",["nodered", terraform.workspace,random_string.random[count.index].result])
   ports {
     internal = var.int_port
-    external = var.ext_port[count.index]
+    external = var.ext_port[terraform.workspace][count.index]
   }
 
   volumes {
     container_path = "/data"
-    host_path = "/mnt/c/Users/kasun/OneDrive/MCSA/DevOps/Terraform/MorethanCertifiedinTerraform/mtc-terraform/terraform-docker/noderedvol"
+    host_path = "${path.cwd}/noderedvol/"
   }
 }
 
