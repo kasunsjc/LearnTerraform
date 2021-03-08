@@ -1,1 +1,6 @@
-access_ip = "0.0.0.0/0"
+access_ip   = "0.0.0.0/0"
+db_name     = "rancher"
+db_username = "mike"
+db_password = "kasunraj123"
+instance_count = "1"
+instance_type = "t3.micro"
