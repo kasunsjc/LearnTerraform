@@ -19,6 +19,12 @@ locals {
           to          = 80
           protocol    = "tcp"
           cidr_blocks = ["0.0.0.0/0"]
+        },
+        nginx = {
+          from = 8000
+          to = 8000
+          protocol ="tcp"
+          cidr_blocks = ["0.0.0.0/0"]
         }
       }
     },

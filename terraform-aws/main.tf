@@ -38,7 +38,7 @@ module "loadbalancing" {
   alb_interval            = 30
   alb_timeout             = 5
   target_group_protocol   = "HTTP"
-  listener_port = "80"
+  listener_port = 80
   listener_protocol = "HTTP"
 }
 
@@ -56,4 +56,5 @@ module "compute" {
   db_name = var.db_name
   db_password = var.db_password
   db_username = var.db_username
+  alb_target_group_arn = module.loadbalancing.alb_target_group_arn
 }

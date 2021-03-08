@@ -47,3 +47,10 @@ resource "aws_instance" "app_node" {
     volume_size = var.volume_size #10
   }
 }
+
+resource "aws_lb_target_group_attachment" "alb_attachment" {
+  target_group_arn = var.alb_target_group_arn
+  target_id = aws_instance.app_node[count.index].id
+  count =  var.instance_count
+  port = 8000
+}
