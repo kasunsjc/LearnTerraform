@@ -13,7 +13,6 @@ module "networking" {
   db_subnetgroup   = true
 }
 
-/*
 module "database" {
   source                 = "./database"
   db_storage             = 10
@@ -27,7 +26,6 @@ module "database" {
   vpc_security_group_ids = module.networking.db_security_group_ids
   skip_db_snapshot       = true
 }
-*/
 
 module "loadbalancing" {
   source                  = "./loadbalancing"
@@ -51,4 +49,11 @@ module "compute" {
   public_sg = module. networking.public_sg_ids
   public_subnet_ids = module.networking.public_subnet_ids
   volume_size = 10
+  public_key_path = var.public_key_path
+  key_name = var.key_name
+  user_data_path = "${path.root}/userdata.tpl"
+  db_endpoint = module.database.db_endpoint
+  db_name = var.db_name
+  db_password = var.db_password
+  db_username = var.db_username
 }

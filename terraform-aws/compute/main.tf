@@ -13,6 +13,14 @@ data "aws_ami" "server_ami" {
 resource "random_id" "app_node" {
   byte_length = 3
   count = var.instance_count
+  keepers = {
+    key_name = var.key_name
+  }
+}
+
+resource "aws_key_pair" "app_node_key_pair" {
+  key_name = var.key_name
+  public_key = file(var.public_key_path)
 }
 
 resource "aws_instance" "app_node" {
@@ -22,8 +30,17 @@ resource "aws_instance" "app_node" {
   tags = {
     Name = "app-node-${random_id.app_node[count.index].dec}"
   }
-  #key_name = ""
-  #user_data = ""
+  key_name = aws_key_pair.app_node_key_pair.id
+  user_data = templatefile(var.user_data_path,
+  {
+    nodename = "app-node-${random_id.app_node[count.index].dec}",
+    dbuser = var.db_username
+    dbpass = var.db_password
+    db_endpoint = var.db_endpoint
+    db_name = var.db_name
+  }
+
+  )
   vpc_security_group_ids = [var.public_sg]
   subnet_id = var.public_subnet_ids[count.index]
   root_block_device {
