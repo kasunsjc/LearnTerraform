@@ -1,6 +1,6 @@
 # Local .terraform directories
+**/.terraform/modules
 **/.terraform/*
-
 # .tfstate files
 *.tfstate
 *.tfstate.*
@@ -14,7 +14,6 @@ crash.log
 # version control.
 #
 *.tfvars
-/terraform-aws/terraform.tfvars
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
